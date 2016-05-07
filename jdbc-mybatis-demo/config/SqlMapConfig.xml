@@ -30,5 +30,12 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		</environment>
 	</environments>
 
+	<!--加载mapper的xml文件  -->
+	<mappers>
+		<mapper resource="sqlmap/User.xml "/>
+	</mappers>
+	
+	
+	
 	
 </configuration>
