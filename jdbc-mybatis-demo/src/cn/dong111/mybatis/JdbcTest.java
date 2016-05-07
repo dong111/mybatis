@@ -10,7 +10,7 @@ import java.sql.SQLException;
  * 
  * <p>Title: JdbcTest</p>
  * <p>Description:通过单独的jdbc程序，总结其中的问题 </p>
- * <p>Company: www.dong111.cn</p> 
+ * <p>Company: www.dong111.cnc</p> 
  * @author 陈栋
  * @date	2015-4-22上午9:16:05
  * @version 1.0
