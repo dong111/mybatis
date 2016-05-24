@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace命名空间，作用就是对sql进行分类管理,理解sql隔离
+注意:使用mapper开发，命名空间具有特殊的作用，namespce等于mapper的接口地址 
+ -->
+<mapper namespace="cn.dong111.mapper.UserMapper">
+
+
+<!-- 定义sql片段
+
+ -->
+	<sql id="query_user_where">
+	
+	</sql>
+
+
+	<select id="findUserList"  parameterType="cn.dong111.pojo.UserQueryVo" resultType="cn.dong111.pojo.UserCustom">
+		SELECT * FROM user
+		<!-- 
+			where在这里的作用可以去掉第一个and 连接符号
+		 -->
+		<where>
+			<if test="userCustom.sex!=null and userCustom.sex!=''">
+				and user.sex = #{userCustom.sex}
+			</if>
+			<if test="userCustom.username!=null and userCustom.username!=''">
+				and user.username LIKE '%${userCustom.username}%'
+			</if>
+			<if test="ids!=null">
+			<!-- 使用foreache 遍历传入的ids
+				collection :指定输入对象中集合的熟悉
+				item:每个遍历生成对象中
+				open:开始遍历时拼接的串
+				close:结束遍历时拼接串
+				separator:遍历的两个对象中需要拼接的串
+			 -->
+			 
+			 
+			 <!-- 使用实现下边sql的拼接
+			 	AND (id = 1 OR id = 10 OR id = 16)
+			  -->
+			  
+			  <foreach collection="ids" item="userId" open="AND (" close=")" separator="or">
+			  	<!-- 每个遍历需要拼接的串 -->
+			  	id = #{userId}
+			  </foreach>
+			  
+			  <!-- 实现 " and id IN (1,10,16)"拼接 -->
+<!-- 			  <foreach collection="ids" item="userId" open="and id IN (" close=")" separator=",">
+			  	每个遍历需要拼接的串
+			  	#{userId}
+			  </foreach> -->
+			  
+			</if>
+		
+		</where>
+	</select>
+
+
+</mapper>

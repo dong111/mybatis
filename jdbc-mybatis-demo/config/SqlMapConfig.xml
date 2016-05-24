@@ -5,10 +5,10 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 <configuration>
 
 	<!-- 加载属性文件 -->
-	<properties resource="db.properties">
-		<!--properties中还可以配置一些属性名和属性值  -->
-		<!-- <property name="jdbc.driver" value=""/> -->
-	</properties>
+<!-- 	<properties resource="db.properties">
+		properties中还可以配置一些属性名和属性值 
+		<property name="jdbc.driver" value=""/>
+	</properties> -->
 	<!-- 全局配置参数，需要时再设置 -->
 	<!-- <settings>
 	
@@ -32,7 +32,11 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 
 	<!--加载mapper的xml文件  -->
 	<mappers>
-		<mapper resource="sqlmap/User.xml "/>
+		<mapper resource="sqlmap/User.xml"/>
+		
+		<!--使用 resource一次加载一个文件  -->
+		<mapper resource="mapper/UserMapper.xml"/>
+		
 	</mappers>
 	
 	
