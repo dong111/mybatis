@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.io.Resources;
@@ -59,7 +60,7 @@ public class UserMapperTest {
 		userQueryVo.setUserCustom(userCustom);
 		
 		List<UserCustom> userList =  userMapper.findUserList(userQueryVo);
-		
+		sqlSession.close();
 		System.out.println(userList.size());
 		
 	}
@@ -87,6 +88,7 @@ public class UserMapperTest {
 		
 		
 		int count = userMapper.findUserCount(userQueryVo);
+		sqlSession.close();
 		System.out.println(count);
 	}
 
@@ -97,6 +99,7 @@ public class UserMapperTest {
 		UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
 		
 		User user =  userMapper.findUserById(1);
+		sqlSession.close();
 		System.out.println(user);
 	}
 
@@ -106,6 +109,7 @@ public class UserMapperTest {
 		
 		UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
 		User user = userMapper.findUserByResultMap(1);
+		sqlSession.close();
 		System.out.println(user);
 		
 	}
@@ -123,18 +127,32 @@ public class UserMapperTest {
 		//这个就是典型的sql注入测试用例  这样的参数需要我们在代码中手工进行处理来防止注入
 //		List<User> users = userMapper.findUserByName("小明' or 1=1 or '");
 		List<User> users = userMapper.findUserByName("小明");
-		
+		sqlSession.close();
 		System.out.println(users.size());
 		
 	}
 
 	@Test
-	public void testInsertUser() {
-		fail("Not yet implemented");
+	public void testInsertUser() throws Exception {
+		SqlSession sqlSession = sqlSessionFactory.openSession();
+		
+		UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+		
+		User user = new User();
+		user.setUsername("insertUser");
+		user.setBirthday(new Date());
+		user.setSex("男");
+		userMapper.insertUser(user);
+		
+		System.out.println(user);
+		
+		sqlSession.commit();
+		sqlSession.close();
+		
 	}
 
 	@Test
-	public void testDeleteUser() {
+	public void testDeleteUser() throws Exception {
 		fail("Not yet implemented");
 	}
 
