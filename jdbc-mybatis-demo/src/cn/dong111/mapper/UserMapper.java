@@ -29,7 +29,10 @@ public interface UserMapper {
 	public void insertUser(User user) throws Exception;
 	
 	//删除用户
-	public void deleteUser(User user) throws Exception;
+	public void deleteUser(int id) throws Exception;
+	
+	//更新用户
+	public void updateUser(User user);
 	
 	
 

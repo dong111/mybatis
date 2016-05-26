@@ -153,7 +153,34 @@ public class UserMapperTest {
 
 	@Test
 	public void testDeleteUser() throws Exception {
-		fail("Not yet implemented");
+		
+		SqlSession sqlSession = sqlSessionFactory.openSession();
+		
+		UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+		userMapper.deleteUser(32);
+		sqlSession.commit();
+		sqlSession.close();
 	}
+	
+	
+	
+	@Test
+	public void testUpdateUser() throws Exception{
+		SqlSession sqlSession = sqlSessionFactory.openSession();
+		
+		UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+		
+		User user = new User();
+		user.setId(30);
+		user.setUsername("update name");
+		
+		userMapper.updateUser(user);
+		
+		sqlSession.commit();
+		sqlSession.close();
+		
+		
+	}
+	
 
 }
