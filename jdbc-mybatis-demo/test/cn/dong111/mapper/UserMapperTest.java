@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.io.Resources;
@@ -45,9 +46,16 @@ public class UserMapperTest {
 		//创建查询pojo 包装类
 		UserQueryVo userQueryVo = new UserQueryVo();
 		UserCustom userCustom = new UserCustom();
-		userCustom.setSex("男");
+		userCustom.setSex("1");
 		userCustom.setUsername("小明");
 		
+		//传入多个id
+		List<Integer> ids = new ArrayList<Integer>();
+		ids.add(1);
+		ids.add(10);
+		ids.add(16);
+		//将ids通过userQueryVo传入statement中
+		userQueryVo.setIds(ids);
 		userQueryVo.setUserCustom(userCustom);
 		
 		List<UserCustom> userList =  userMapper.findUserList(userQueryVo);
@@ -57,23 +65,55 @@ public class UserMapperTest {
 	}
 
 	@Test
-	public void testFindUserCount() {
+	public void testFindUserCount() throws Exception {
+		SqlSession sqlSession = sqlSessionFactory.openSession();
+		
+		UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+		
+		//创建查询pojo 包装类
+		UserQueryVo userQueryVo = new UserQueryVo();
+		UserCustom userCustom = new UserCustom();
+		userCustom.setSex("1");
+		userCustom.setUsername("小明");
+		
+		//传入多个id
+		List<Integer> ids = new ArrayList<Integer>();
+		ids.add(1);
+		ids.add(10);
+		ids.add(16);
+		//将ids通过userQueryVo传入statement中
+		userQueryVo.setIds(ids);
+		userQueryVo.setUserCustom(userCustom);
+		
+		
+		int count = userMapper.findUserCount(userQueryVo);
+		System.out.println(count);
+	}
+
+	@Test
+	public void testFindUserById() throws Exception {
+		SqlSession sqlSession = sqlSessionFactory.openSession();
+		
+		UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+		
+		User user =  userMapper.findUserById(1);
+		System.out.println(user);
+	}
+
+	@Test
+	public void testFindUserByResultMap() throws Exception {
+		SqlSession sqlSession = sqlSessionFactory.openSession();
+		
+		UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+		User user = userMapper.findUserByResultMap(1);
+		System.out.println(user);
 		
 	}
 
 	@Test
-	public void testFindUserById() {
-		fail("Not yet implemented");
-	}
+	public void testFindUserByName() throws Exception {
 
-	@Test
-	public void testFindUserByResultMap() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testFindUserByName() {
-		fail("Not yet implemented");
+		
 	}
 
 	@Test

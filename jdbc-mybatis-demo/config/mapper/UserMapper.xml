@@ -7,23 +7,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 注意:使用mapper开发，命名空间具有特殊的作用，namespce等于mapper的接口地址 
  -->
 <mapper namespace="cn.dong111.mapper.UserMapper">
-
+	
 
 <!-- 定义sql片段
-
+	id:sql片段的唯一标识符
+		经验：是基于单表来定义sql片段，这样话这个sql片段可重用性才高
+	在sql片段中不要包括 where
  -->
 	<sql id="query_user_where">
-	
-	</sql>
-
-
-	<select id="findUserList"  parameterType="cn.dong111.pojo.UserQueryVo" resultType="cn.dong111.pojo.UserCustom">
-		SELECT * FROM user
-		<!-- 
-			where在这里的作用可以去掉第一个and 连接符号
-		 -->
-		<where>
-			<if test="userCustom.sex!=null and userCustom.sex!=''">
+				<if test="userCustom.sex!=null and userCustom.sex!=''">
 				and user.sex = #{userCustom.sex}
 			</if>
 			<if test="userCustom.username!=null and userCustom.username!=''">
@@ -49,15 +41,83 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			  </foreach>
 			  
 			  <!-- 实现 " and id IN (1,10,16)"拼接 -->
-<!-- 			  <foreach collection="ids" item="userId" open="and id IN (" close=")" separator=",">
+			<!-- 			
+			  <foreach collection="ids" item="userId" open="and id IN (" close=")" separator=",">
 			  	每个遍历需要拼接的串
 			  	#{userId}
 			  </foreach> -->
 			  
 			</if>
-		
+	</sql>
+
+	<!-- 定义resultMap    **这个功能个人觉得可以用别名代替
+	将SELECT id id_,username username_ FROM USER 和User类中的属性作一个映射关系
+	
+	type：resultMap最终映射的java对象类型,可以使用别名
+	id：对resultMap的唯一标识
+	 -->
+	<resultMap type="user" id="userResultMap">
+	<!-- id 表铸剑Id
+		column:查询出来的列名
+		property : type指定pojo属性名称
+		最终resultMap对column和property做了一个映射关系 
+	 -->
+	<id column="id_" property="id" />
+	
+		<!-- 
+	 	result：对普通名映射定义
+	 	column：查询出来的列名
+	 	property：type指定的pojo类型中的属性名
+	 	最终resultMap对column和property作一个映射关系 （对应关系）
+	 	 -->
+	<result column="username_" property="username"/>
+	
+	</resultMap>
+
+
+	<!--  查询符合条件的userlist-->
+	<select id="findUserList"  parameterType="cn.dong111.pojo.UserQueryVo" resultType="cn.dong111.pojo.UserCustom">
+		SELECT * FROM user
+		<!-- 
+			where在这里的作用可以去掉第一个and 连接符号
+		 -->
+		<where>
+			<include refid="query_user_where"></include>
+		</where>
+	</select>
+	
+	<select id="findUserCount" parameterType="cn.dong111.pojo.UserQueryVo" resultType="int">
+			 SELECT count(*) FROM user
+		<where>
+		<!-- 引用sql片段 的id，如果refid指定的id不在本mapper文件中，需要前边加namespace -->
+			<include refid="query_user_where"></include>
 		</where>
 	</select>
 
+
+
+	<!-- 在 映射文件中配置很多sql语句 -->
+	<!-- 需求：通过id查询用户表的记录 -->
+	<!-- 通过 select执行数据库查询
+	id：标识 映射文件中的 sql
+	将sql语句封装到mappedStatement对象中，所以将id称为statement的id
+	parameterType：指定输入 参数的类型，这里指定int型 
+	#{}表示一个占位符号
+	#{id}：其中的id表示接收输入 的参数，参数名称就是id，如果输入 参数是简单类型，#{}中的参数名可以任意，可以value或其它名称
+	
+	resultType：指定sql输出结果 的所映射的java对象类型，select指定resultType表示将单条记录映射成的java对象。
+	 -->
+	<select id="findUserById" parameterType="int" resultType="user">
+		SELECT * FROM user WHERE id=#{value}
+	</select>
+	
+	
+	<!-- 使用resultMap进行输出映射
+	resultMap：指定定义的resultMap的id，如果这个resultMap在其它的mapper文件，前边需要加namespace
+	-->
+	<select id="findUserByResultMap" parameterType="int" resultMap="userResultMap">
+			SELECT id id_,username username_ FROM user WHERE id=#{value}
+	</select>
+	
 
 </mapper>
