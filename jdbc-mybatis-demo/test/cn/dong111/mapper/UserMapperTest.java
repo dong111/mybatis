@@ -110,9 +110,21 @@ public class UserMapperTest {
 		
 	}
 
+	/**
+	 * sql注入测试
+	 * @throws Exception
+	 */
 	@Test
 	public void testFindUserByName() throws Exception {
-
+		SqlSession sqlSession = sqlSessionFactory.openSession();
+		
+		UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+		
+		//这个就是典型的sql注入测试用例  这样的参数需要我们在代码中手工进行处理来防止注入
+//		List<User> users = userMapper.findUserByName("小明' or 1=1 or '");
+		List<User> users = userMapper.findUserByName("小明");
+		
+		System.out.println(users.size());
 		
 	}
 

@@ -119,5 +119,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			SELECT id id_,username username_ FROM user WHERE id=#{value}
 	</select>
 	
+	
+	
+	<select id="findUserByName" parameterType="java.lang.String" resultType="user">
+		<!--SELECT * FROM user WHERE username like '%${value}%'   这样写只能在java方法调用时候来防止sql注入 -->
+		<!-- 如果要在sql中防止sql注入  只能使用#{}占位符来拼接%来like查询 不能使用拼接符号${} -->
+		<!-- SELECT * FROM user WHERE username LIKE '%' || #{value} || '%' oracle字符串拼接占位符防止注入 -->
+		<!-- SELECT * FROM user WHERE username LIKE '%' + #{value} + '%'  sqlServer字符串拼接占位符防止注入 -->
+		<!-- mysql字符串拼接占位符防止注入 -->
+		 SELECT * FROM user WHERE username LIKE concat('%', #{name}, '%') 
+	</select>
+	
 
 </mapper>
